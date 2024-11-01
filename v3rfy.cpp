@@ -1,11 +1,10 @@
 #include <iostream>
 #include "shell/shell.h"
 
-using namespace std;
-using namespace Shell;
-
 int main()
 {
-    shell;
+    Shell::shell shell;
+    shell.start();
+    std::cin.get();
     return 0;
 }
