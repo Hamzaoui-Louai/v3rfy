@@ -11,16 +11,12 @@ namespace Shell
         void clearScreen() 
         {
             HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            COORD coord = { 0, 0 };
-            DWORD count;
-            DWORD cellCount;
-
             CONSOLE_SCREEN_BUFFER_INFO csbi;
             GetConsoleScreenBufferInfo(hConsole, &csbi);
-            cellCount = csbi.srWindow.Right - csbi.srWindow.Left + static_cast<DWORD>(1) * (csbi.srWindow.Bottom - csbi.srWindow.Top + static_cast<DWORD>(1));
-    
+            COORD coord = { 0, 0 };
+            DWORD count;
+            DWORD cellCount = static_cast<DWORD>((csbi.srWindow.Right - csbi.srWindow.Left + 1) * (csbi.srWindow.Bottom - csbi.srWindow.Top + 1));
             FillConsoleOutputCharacter(hConsole, ' ', cellCount, coord, &count);
-            GetConsoleScreenBufferInfo(hConsole, &csbi);
             FillConsoleOutputAttribute(hConsole, csbi.wAttributes, cellCount, coord, &count);
             SetConsoleCursorPosition(hConsole, coord);
         }
@@ -30,12 +26,16 @@ namespace Shell
             coord.Y = y;
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
         }
+        void drawMainShell(short StartX = 0,short StartY = 0)
+        {
+            gotoxy(StartX,StartY);
+            std::cout << "\033[32m welcome to V3rfy \n  if you're new here type 'help' to get started\n >>> ";
+        }
     public:
         void start()
         {
             clearScreen();
-            gotoxy(static_cast<short>(0),static_cast<short>(0));
-            std::cout << "\033[35m new shell was born today !";
+            drawMainShell(0,5);
         }
     };
 }
