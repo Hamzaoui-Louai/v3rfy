@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include <iostream>
+#include <string>
 
 namespace Shell
 {
@@ -20,7 +21,8 @@ namespace Shell
             FillConsoleOutputAttribute(hConsole, csbi.wAttributes, cellCount, coord, &count);
             SetConsoleCursorPosition(hConsole, coord);
         }
-        void gotoxy(short x, short y) {
+        void gotoxy(short x, short y) 
+        {
             COORD coord;
             coord.X = x;
             coord.Y = y;
@@ -41,6 +43,20 @@ namespace Shell
             gotoxy(StartX+1,StartY);
             std::cout << "\033[1mTools :";
         }
+        void drawIntro(short StartX = 0,short StartY = 0,short EndX = 54, short EndY = 8)
+        {
+            std::string Logo[] = {"         ___   ______                   ___           ","        /  /  |___   \\    __   ___     /  _|          ","___    /  /     __\\   |  |  |_/  /   _|  |_   __    __","\\  \\  /  /     |___  <   |   ___/   |_    _|  \\ \\  / /"," \\  \\/  /      ____\\  \\  |  |         |  |     \\ \\/ / ","  \\____/      |_______/  |__|         |__|      \\  /  ","                                                / /   ","                                               /_/    "};
+            std::cout<<"\033[32m";
+            for(short i=0;i<8;i++)
+            {
+                for(short j=0;j<Logo[i].length();j++)
+                {
+                    gotoxy(j,i);
+                    std::cout << Logo[i][j];
+                    Sleep(10);
+                }
+            }
+        }
     public:
         void getShellCorners(short &Left,short &Top,short &Right,short &Bottom)
         {
@@ -59,11 +75,13 @@ namespace Shell
             Width = Right - Left + 1;
             Height = Bottom - Top + 1;
         }
+        
         void start()
         {
             clearScreen();
-            drawToolsBar(100,0,120,30);
-            drawMainShell(0,1);         
+            //drawToolsBar(100,0,120,30);
+            //drawMainShell(0,1);      
+            drawIntro();
         }
     };
 }
