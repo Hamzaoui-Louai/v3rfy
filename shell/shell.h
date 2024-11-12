@@ -28,7 +28,7 @@ namespace Shell
             coord.Y = y;
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
         }
-        void drawMainShell(short StartX = 0,short StartY = 0)
+        /*void drawMainShell(short StartX = 0,short StartY = 0)
         {
             gotoxy(StartX,StartY);
             std::cout << "\033[32m welcome to V3rfy \n  if you're new here type 'help' to get started\n >>> ";
@@ -43,7 +43,8 @@ namespace Shell
             gotoxy(StartX+1,StartY);
             std::cout << "\033[1mTools :";
         }
-        void drawIntro(short StartX = 0,short StartY = 0,short EndX = 54, short EndY = 8)
+        */
+        void drawIntro(short StartX = 0,short StartY = 0,short EndX = 100, short EndY = 25)
         {
             std::string Logo[] = {"         ___   ______                   ___           ","        /  /  |___   \\    __   ___     /  _|          ","___    /  /     __\\   |  |  |_/  /   _|  |_   __    __","\\  \\  /  /     |___  <   |   ___/   |_    _|  \\ \\  / /"," \\  \\/  /      ____\\  \\  |  |         |  |     \\ \\/ / ","  \\____/      |_______/  |__|         |__|      \\  /  ","                                                / /   ","                                               /_/    "};
             std::cout<<"\033[32m";
@@ -51,9 +52,9 @@ namespace Shell
             {
                 for(short j=0;j<Logo[i].length();j++)
                 {
-                    gotoxy(j,i);
-                    std::cout << Logo[i][j];
                     Sleep(10);
+                    gotoxy(j+(EndX-StartX)/2-Logo[i].length()/2,i+(EndY-StartY)/2-4);
+                    std::cout << Logo[i][j];               
                 }
             }
         }
