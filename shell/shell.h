@@ -39,18 +39,7 @@ namespace Shell
         //tools
         toolsbar ToolsBar;
         //shell functions
-        void clearScreen() 
-        {
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            CONSOLE_SCREEN_BUFFER_INFO csbi;
-            GetConsoleScreenBufferInfo(hConsole, &csbi);
-            COORD coord = { 0, 0 };
-            DWORD count;
-            DWORD cellCount = static_cast<DWORD>((csbi.srWindow.Right - csbi.srWindow.Left + 1) * (csbi.srWindow.Bottom - csbi.srWindow.Top + 1));
-            FillConsoleOutputCharacter(hConsole, ' ', cellCount, coord, &count);
-            FillConsoleOutputAttribute(hConsole, csbi.wAttributes, cellCount, coord, &count);
-            SetConsoleCursorPosition(hConsole, coord);
-        }
+        
         void gotoxy(short x, short y) 
         {
             COORD coord;
@@ -97,6 +86,14 @@ namespace Shell
             {
                 RenderPipeline[i] = "";                
             }
+        }
+        void clearScreen() 
+        {
+            #ifdef _WIN32
+                std::system("cls");
+            #else
+                std::system("clear");
+            #endif
         }
         void Render()
         {
