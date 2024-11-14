@@ -4,11 +4,41 @@
 #include <Windows.h>
 #include <iostream>
 #include <string>
+#include "toolsbar.h"
+
+namespace bonus
+{
+    std::string split(std::string Str,char Chr,int sliced) 
+    {
+        std::string result = "";
+        int N = 0;
+        for(int i=0;i<(static_cast<int>(Str.length()));i++)
+        {
+            if(Str[i] == Chr)
+            {
+                N++;   
+                continue;             
+            }           
+            if(N == sliced)
+            {
+                result += Str[i];
+            }
+            if(N > sliced)
+            {
+                break;
+            }
+        }
+        return result;
+    }
+};
 
 namespace Shell
 {
     class shell{
     private:
+        //tools
+        toolsbar ToolsBar;
+        //shell functions
         void clearScreen() 
         {
             HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -35,13 +65,7 @@ namespace Shell
         }
         void drawToolsBar(short StartX = 0,short StartY = 0,short EndX = 0, short EndY = 0)
         {
-            for(short i = StartY;i<=EndY;i++)
-            {
-                gotoxy(StartX,i);
-                std::cout << '|';
-            }
-            gotoxy(StartX+1,StartY);
-            std::cout << "\033[1mTools :";
+            
         }
         */
         void drawIntro(short StartX = 0,short StartY = 0,short EndX = 100, short EndY = 25)
@@ -57,8 +81,88 @@ namespace Shell
                     std::cout << Logo[i][j];               
                 }
             }
+            Sleep(5000);
         }
     public:
+        short ShellLeft;
+        short ShellRight;
+        short ShellTop;
+        short ShellBottom;
+        short ShellWidth;
+        short ShellHeight;
+        std::string RenderPipeline[50]; 
+        void clearRenderPipeline()
+        {
+            for(short i;i<50;i++)
+            {
+                RenderPipeline[i] = "";                
+            }
+        }
+        void Render()
+        {
+            getShellCorners(ShellLeft,ShellTop,ShellRight,ShellBottom);    
+            getShellDimensions(ShellWidth,ShellHeight);
+            std::string tool;
+            std::string L,T,R,B;
+            short Left,Top,Right,Bottom;
+            for(short i = 0;i<50;i++)
+            {
+                tool = bonus::split(RenderPipeline[i],';',0);
+                L = bonus::split(RenderPipeline[i],';',1);
+                T = bonus::split(RenderPipeline[i],';',2);
+                R = bonus::split(RenderPipeline[i],';',3);
+                B = bonus::split(RenderPipeline[i],';',4);
+                if(bonus::split(L,'|',1) == "%")
+                {
+                    if(std::stoi(bonus::split(L,'|',0)) == 0)
+                    {
+                        Left = ShellLeft;
+                    }
+                    else
+                    {
+                    Left = ShellLeft + ShellWidth * std::stoi(bonus::split(L,'|',0)) / 100;
+                    }
+                }
+                if(bonus::split(T,'|',1) == "%")
+                {
+                    if(std::stoi(bonus::split(T,'|',0)) == 0)
+                    {
+                        Top = ShellTop;
+                    }
+                    else
+                    {
+                        Top = ShellTop + ShellHeight * std::stoi(bonus::split(T,'|',0)) / 100;
+                    }
+                }
+                if(bonus::split(R,'|',1) == "%")
+                {
+                    if(std::stoi(bonus::split(R,'|',0)) == 0)
+                    {
+                        Right = ShellLeft;
+                    }
+                    else
+                    {
+                        Right = ShellLeft + ShellWidth * std::stoi(bonus::split(R,'|',0)) / 100;
+                    }
+                }
+                if(bonus::split(B,'|',1) == "%")
+                {
+                    if(std::stoi(bonus::split(B,'|',0)) == 0)
+                    {
+                        Bottom = ShellTop;
+                    }
+                    else
+                    {
+                        Bottom = ShellTop + ShellHeight * std::stoi(bonus::split(B,'|',0)) / 100;
+                    }
+                }
+                if(tool == "ToolsBar")
+                {
+                    ToolsBar.render(Left,Top,Right,Bottom);
+                }
+            }
+            
+        }
         void getShellCorners(short &Left,short &Top,short &Right,short &Bottom)
         {
             HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -81,8 +185,15 @@ namespace Shell
         {
             clearScreen();
             //drawToolsBar(100,0,120,30);
-            //drawMainShell(0,1);      
-            drawIntro();
+            //drawMainShell(0,1);  
+            getShellCorners(ShellLeft,ShellTop,ShellRight,ShellBottom);    
+            getShellDimensions(ShellWidth,ShellHeight);
+            drawIntro(ShellLeft,ShellTop,ShellRight,ShellBottom);
+            clearScreen();
+            clearRenderPipeline();
+            RenderPipeline[0] = "ToolsBar;80|%;0|%;100|%;100|%";
+            Render();
+            //std::cout<<"holding this shi together";
         }
     };
 }
