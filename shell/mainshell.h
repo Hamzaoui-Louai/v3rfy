@@ -1,11 +1,11 @@
-#ifndef TOOLSBAR
-#define TOOLSBAR
+#ifndef MAINSHELL
+#define MAINSHELL
 
 #include <Windows.h>
 #include <iostream>
 #include <string>
 
-class toolsbar
+class mainshell
 {
     private:
     void gotoxy(short x, short y) 
@@ -18,15 +18,9 @@ class toolsbar
     public:
     void render(short StartX,short StartY,short EndX,short EndY)
     {
+        gotoxy(StartX,StartY);
         std::cout<<"\033[0m";
-        std::cout<<"\033[97m";
-        for(short i = StartY;i<EndY;i++)
-            {
-                gotoxy(StartX,i);
-                std::cout << '|';
-            }
-            gotoxy(StartX+1,StartY);
-            std::cout << "\033[1mTools :";
+        std::cout << "\033[32m welcome to V3rfy \n  if you're new here type 'help' to get started\n >>> ";
     }
 };
 

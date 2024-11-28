@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include "toolsbar.h"
+#include "mainshell.h"
+#include "projecthandler.h"
 
 namespace bonus
 {
@@ -38,6 +40,8 @@ namespace Shell
     private:
         //tools
         toolsbar ToolsBar;
+        mainshell MainShell;
+        projecthandler ProjectHandler;
         //shell functions
         
         void gotoxy(short x, short y) 
@@ -47,16 +51,6 @@ namespace Shell
             coord.Y = y;
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
         }
-        /*void drawMainShell(short StartX = 0,short StartY = 0)
-        {
-            gotoxy(StartX,StartY);
-            std::cout << "\033[32m welcome to V3rfy \n  if you're new here type 'help' to get started\n >>> ";
-        }
-        void drawToolsBar(short StartX = 0,short StartY = 0,short EndX = 0, short EndY = 0)
-        {
-            
-        }
-        */
         void drawIntro(short StartX = 0,short StartY = 0,short EndX = 100, short EndY = 25)
         {
             std::string Logo[] = {"         ___   ______                   ___           ","        /  /  |___   \\    __   ___     /  _|          ","___    /  /     __\\   |  |  |_/  /   _|  |_   __    __","\\  \\  /  /     |___  <   |   ___/   |_    _|  \\ \\  / /"," \\  \\/  /      ____\\  \\  |  |         |  |     \\ \\/ / ","  \\____/      |_______/  |__|         |__|      \\  /  ","                                                / /   ","                                               /_/    "};
@@ -117,7 +111,7 @@ namespace Shell
                     }
                     else
                     {
-                    Left = ShellLeft + ShellWidth * std::stoi(bonus::split(L,'|',0)) / 100;
+                        Left = ShellLeft + ShellWidth * std::stoi(bonus::split(L,'|',0)) / 100;
                     }
                 }
                 if(bonus::split(T,'|',1) == "%")
@@ -142,6 +136,10 @@ namespace Shell
                         Right = ShellLeft + ShellWidth * std::stoi(bonus::split(R,'|',0)) / 100;
                     }
                 }
+                if(bonus::split(R,'|',1) == "u")
+                {
+                    Right = ShellLeft + ShellWidth * std::stoi(bonus::split(R,'|',0)) / 100;
+                }
                 if(bonus::split(B,'|',1) == "%")
                 {
                     if(std::stoi(bonus::split(B,'|',0)) == 0)
@@ -156,6 +154,14 @@ namespace Shell
                 if(tool == "ToolsBar")
                 {
                     ToolsBar.render(Left,Top,Right,Bottom);
+                }
+                if(tool == "MainShell")
+                {
+                    MainShell.render(Left,Top,Right,Bottom);
+                }
+                if(tool == "ProjectHandler")
+                {
+                    ProjectHandler.render(Left,Top,Right,Bottom);
                 }
             }
             
@@ -188,9 +194,10 @@ namespace Shell
             drawIntro(ShellLeft,ShellTop,ShellRight,ShellBottom);
             clearScreen();
             clearRenderPipeline();
-            RenderPipeline[0] = "ToolsBar;80|%;0|%;100|%;100|%";
+            RenderPipeline[0] = "ProjectHandler;0|%;0|%;80|%;5|%";
+            RenderPipeline[1] = "ToolsBar;80|%;0|%;100|%;100|%";           
+            RenderPipeline[2] = "MainShell;0|%;5|%;80|%;100|%";
             Render();
-            //std::cout<<"holding this shi together";
         }
     };
 }
